@@ -1,0 +1,41 @@
+<?php
+// $Id$
+
+/**
+ * Implementation of hook_install().
+ */
+function node_noindex_install() {
+  drupal_install_schema('node_noindex');
+}
+
+/**
+ * Implementation of hook_schema().
+ */
+function node_noindex_schema() {
+  $schema['node_noindex'] = array(
+    'fields' => array(
+      'nid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'disp-width' => '11',
+      ),
+      'noindex' => array(
+        'type' => 'int',
+        'not null' => FALSE,
+        'disp-width' => '1',
+      ),
+    ),
+    'indexes' => array(
+      'noindex' => array('noindex'),
+    ),
+    'primary key' => array('nid'),
+  );
+  return $schema;
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function node_noindex_uninstall() {
+  drupal_uninstall_schema('node_noindex');
+}

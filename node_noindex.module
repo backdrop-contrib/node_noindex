@@ -1,0 +1,150 @@
+<?php
+// $Id$
+
+/**
+ * Implementation of hook_views_api().
+ */
+function node_noindex_views_api() {
+  return array(
+    'api' => '2.0',
+    'path' => drupal_get_path('module', 'node_noindex'),
+  );
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function node_noindex_perm() {
+  return array('administer node_noindex');
+}
+
+/**
+ * Implementation of hook_theme().
+ */
+function node_noindex_theme($existing, $type, $theme, $path) {
+  return array(
+    'node_noindex_header' => array(
+      'arguments' => array(),
+    ),
+  );
+}
+
+/**
+ * @return
+ *  A meta tag with noindex instructions.
+ */
+function theme_node_noindex_header() {
+  return '<meta name="robots" content="noindex" />';
+}
+
+/**
+ * Implementation of hook_nodeapi().
+ */
+function node_noindex_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
+  switch ($op) {
+    case 'load':
+      $node->noindex = _node_noindex_node_has_noindex($node);
+      break;
+    case 'view':
+      if (_node_noindex_node_has_noindex($node)) {
+        drupal_set_html_head(theme('node_noindex_header'));
+      }
+      break;
+    case 'update':
+      _node_noindex_node_set_noindex($node);
+      break;
+    case 'delete':
+      _node_noindex_node_delete_noindex($node);
+      break;
+  }
+}
+
+/**
+ * Implementation of hook_form_alter().
+ */
+function node_noindex_form_alter(&$form, $form_state, $form_id) {
+  if (isset($form['type']) && isset($form['#node']) && $form['type']['#value'] . '_node_form' == $form_id) {
+    if (user_access('administer node_noindex') && variable_get('node_noindex_' . $form['type']['#value'], 0)) {
+      $node = $form['#node'];
+      $form['node_noindex'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Search engine settings'),
+        '#description' => t('Settings related to search engines'),
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+        '#access' => user_access('administer node_noindex'),
+        '#weight' => 20,
+      );
+
+      $form['node_noindex']['noindex'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Exclude from searchengines'),
+        '#description' => t('If enabled a "noindex"-header will be set on this node. This should mean that this node will not be indexed and not occur in search engine results'),
+        '#default_value' => $node->noindex,
+        '#weight' => 5
+      );
+    }
+  }
+}
+
+/**
+ * Implementation of hook_form_FORM_ID_alter().
+ */
+function node_noindex_form_node_type_form_alter(&$form, $form_state) {
+  $form['node_noindex'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Search engine settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['node_noindex']['node_noindex'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable noindex option.'),
+    '#default_value' => variable_get('node_noindex_' . $form['#node_type']->type, 0),
+    '#description' => t('Should this node type display the noindex setting in the node edit form?'),
+  );
+}
+
+/**
+ * Implementation of hook_content_extra_fields().
+ */
+function node_noindex_content_extra_fields($type_name) {
+  $fields['node_noindex'] = array(
+    'label' => t('Search engine settings'),
+    'description' => t('Node noindex module form.'),
+    'weight' => 100,
+  );
+  return $fields;
+}
+
+/**
+ * @return
+ *  true if the node has the noindex setting.
+ */
+function _node_noindex_node_has_noindex($node) {
+  if (isset($node->noindex)) {
+    return $node->noindex;
+  }
+  return db_result(db_query("SELECT noindex FROM {node_noindex} WHERE nid = %d", $node->nid));
+}
+
+/**
+ * Sets the noindex option to true on the node.
+ *
+ * @param
+ *  object $node
+ */
+function _node_noindex_node_set_noindex($node) {
+  _node_noindex_node_delete_noindex($node);
+  db_query('INSERT INTO {node_noindex} SET nid = %d, noindex = %d', $node->nid, $node->noindex);
+}
+
+/**
+ * Removes the noindex option from the node.
+ *
+ * @param
+ *  object $node
+ */
+function _node_noindex_node_delete_noindex($node) {
+  db_query('DELETE FROM {node_noindex} WHERE nid = %d', $node->nid);
+}
