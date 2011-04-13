@@ -1,5 +1,9 @@
 <?php
-// $Id$
+/**
+ * @file
+ * Install, update and uninstall functions for the node_noindex module.
+ */
+
 
 /**
  * Implementation of hook_install().

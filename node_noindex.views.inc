@@ -1,6 +1,4 @@
 <?php
-// $Id$
-
 /**
  * @file
  * Register the node_noindex views filter handlers.
