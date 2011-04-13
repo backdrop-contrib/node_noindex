@@ -39,9 +39,9 @@ function node_noindex_node_load($nodes, $types) {
 function node_noindex_node_view($node, $view_mode = 'full') {
   if (_node_noindex_node_has_noindex($node) && $view_mode == 'full') {
     $element = array(
-      '#tag' => 'meta', 
+      '#tag' => 'meta',
       '#attributes' => array(
-        'name' => 'robots', 
+        'name' => 'robots',
         'content' => 'noindex',
       ),
     );
@@ -77,8 +77,8 @@ function node_noindex_form_alter(&$form, $form_state, $form_id) {
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,
         '#access' => user_access('administer node_noindex'),
-        '#weight' => 20, 
-        '#group' =>'additional_settings',       
+        '#weight' => 20,
+        '#group' => 'additional_settings',
       );
 
       $form['node_noindex']['noindex'] = array(
@@ -101,7 +101,7 @@ function node_noindex_form_node_type_form_alter(&$form, $form_state) {
     '#title' => t('Search engine settings'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#group' =>'additional_settings',
+    '#group' => 'additional_settings',
   );
   $form['node_noindex']['node_noindex'] = array(
     '#type' => 'checkbox',
