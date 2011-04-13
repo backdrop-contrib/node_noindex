@@ -6,14 +6,15 @@
 
 
 /**
- * Implementation of hook_install().
+ * Implements hook_install().
  */
 function node_noindex_install() {
-  drupal_install_schema('node_noindex');
+  // TODO The drupal_(un)install_schema functions are called automatically in D7.
+  // drupal_install_schema('node_noindex')
 }
 
 /**
- * Implementation of hook_schema().
+ * Implements hook_schema().
  */
 function node_noindex_schema() {
   $schema['node_noindex'] = array(
@@ -38,8 +39,9 @@ function node_noindex_schema() {
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implements hook_uninstall().
  */
 function node_noindex_uninstall() {
-  drupal_uninstall_schema('node_noindex');
+  // TODO The drupal_(un)install_schema functions are called automatically in D7.
+  // drupal_uninstall_schema('node_noindex')
 }

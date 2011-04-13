@@ -34,7 +34,7 @@ function node_noindex_views_data() {
 }
 
 /**
- * Implementation of hook_views_handlers().
+ * Implements hook_views_handlers().
  */
 function node_noindex_views_handlers() {
   return array(

@@ -1,4 +1,8 @@
 ; $Id$
 name = Node Noindex
 description = "Gives the option to exclude specific nodes from search engines"
-core = 6.x
+core = 7.x
+files[] = node_noindex.install
+files[] = node_noindex.module
+files[] = node_noindex.views.inc
+files[] = node_noindex_filter_handler.inc

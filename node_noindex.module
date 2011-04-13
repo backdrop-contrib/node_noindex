@@ -1,6 +1,6 @@
 <?php
 /**
- * Implementation of hook_views_api().
+ * Implements hook_views_api().
  */
 function node_noindex_views_api() {
   return array(
@@ -10,19 +10,24 @@ function node_noindex_views_api() {
 }
 
 /**
- * Implementation of hook_perm().
+ * Implements hook_permission().
  */
-function node_noindex_perm() {
-  return array('administer node_noindex');
+function node_noindex_permission() {
+  return array(
+    'administer node_noindex' => array(
+      'title' => t('administer node_noindex'),
+      'description' => t('TODO Add a description for \'administer node_noindex\''),
+    ),
+  );
 }
 
 /**
- * Implementation of hook_theme().
+ * Implements hook_theme().
  */
 function node_noindex_theme($existing, $type, $theme, $path) {
   return array(
     'node_noindex_header' => array(
-      'arguments' => array(),
+      'variables' => array(),
     ),
   );
 }
@@ -36,32 +41,45 @@ function theme_node_noindex_header() {
 }
 
 /**
- * Implementation of hook_nodeapi().
+ * Implements hook_node_load().
  */
-function node_noindex_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
-  switch ($op) {
-    case 'load':
-      $node->noindex = _node_noindex_node_has_noindex($node);
-      break;
-    case 'view':
-      if (_node_noindex_node_has_noindex($node)) {
-        drupal_set_html_head(theme('node_noindex_header'));
-      }
-      break;
-    case 'update':
-      _node_noindex_node_set_noindex($node);
-      break;
-    case 'delete':
-      _node_noindex_node_delete_noindex($node);
-      break;
+function node_noindex_node_load($node, $types) {
+  $node->noindex = _node_noindex_node_has_noindex($node);
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function node_noindex_node_view($node, $view_mode = 'full') {
+  if (_node_noindex_node_has_noindex($node)) {
+    drupal_add_html_head(theme('node_noindex_header'), $key = NULL /* TODO Set this variable. */);
   }
 }
 
 /**
- * Implementation of hook_form_alter().
+ * Implements hook_node_update().
+ */
+function node_noindex_node_update($node) {
+  _node_noindex_node_set_noindex($node);
+}
+
+/**
+ * Implements hook_node_delete().
+ */
+function node_noindex_node_delete($node) {
+  _node_noindex_node_delete_noindex($node);
+}
+
+/**
+ * Implements hook_nodeapi().
+ */
+function node_noindex_nodeapi_OLD(&$node, $op, $teaser = NULL, $page = NULL) { }
+
+/**
+ * Implements hook_form_alter().
  */
 function node_noindex_form_alter(&$form, $form_state, $form_id) {
-  if (isset($form['type']) && isset($form['#node']) && $form['type']['#value'] . '_node_form' == $form_id) {
+  if (!empty($form['#node_edit_form'])) {
     if (user_access('administer node_noindex') && variable_get('node_noindex_' . $form['type']['#value'], 0)) {
       $node = $form['#node'];
       $form['node_noindex'] = array(
@@ -79,14 +97,14 @@ function node_noindex_form_alter(&$form, $form_state, $form_id) {
         '#title' => t('Exclude from searchengines'),
         '#description' => t('If enabled a "noindex"-header will be set on this node. This should mean that this node will not be indexed and not occur in search engine results'),
         '#default_value' => $node->noindex,
-        '#weight' => 5
+        '#weight' => 5,
       );
     }
   }
 }
 
 /**
- * Implementation of hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter().
  */
 function node_noindex_form_node_type_form_alter(&$form, $form_state) {
   $form['node_noindex'] = array(
@@ -104,7 +122,7 @@ function node_noindex_form_node_type_form_alter(&$form, $form_state) {
 }
 
 /**
- * Implementation of hook_content_extra_fields().
+ * Implements hook_content_extra_fields().
  */
 function node_noindex_content_extra_fields($type_name) {
   $fields['node_noindex'] = array(
@@ -123,7 +141,7 @@ function _node_noindex_node_has_noindex($node) {
   if (isset($node->noindex)) {
     return $node->noindex;
   }
-  return db_result(db_query("SELECT noindex FROM {node_noindex} WHERE nid = %d", $node->nid));
+  return db_query("SELECT noindex FROM {node_noindex} WHERE nid = :nid", array(':nid' => $node->nid))->fetchField();
 }
 
 /**
@@ -134,7 +152,9 @@ function _node_noindex_node_has_noindex($node) {
  */
 function _node_noindex_node_set_noindex($node) {
   _node_noindex_node_delete_noindex($node);
-  db_query('INSERT INTO {node_noindex} SET nid = %d, noindex = %d', $node->nid, $node->noindex);
+  // TODO Please convert this statement to the D7 database API syntax.
+  /* db_query('INSERT INTO {node_noindex} SET nid = %d, noindex = %d', $node->nid, $node->noindex) */
+  NULL;
 }
 
 /**
@@ -144,5 +164,9 @@ function _node_noindex_node_set_noindex($node) {
  *  object $node
  */
 function _node_noindex_node_delete_noindex($node) {
-  db_query('DELETE FROM {node_noindex} WHERE nid = %d', $node->nid);
+  // TODO Please review the conversion of this statement to the D7 database API syntax.
+  /* db_query('DELETE FROM {node_noindex} WHERE nid = %d', $node->nid) */
+  db_delete('node_noindex')
+  ->condition('nid', $node->nid)
+  ->execute();
 }
