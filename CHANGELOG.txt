@@ -1,0 +1,2 @@
+Node noindex 7.x-1.x
+by naxoc: Added an implementation of hook_node_insert so new nodes can have the noindex set upon creation.
