@@ -16,7 +16,7 @@ function node_noindex_permission() {
   return array(
     'administer node_noindex' => array(
       'title' => t('administer node_noindex'),
-      'description' => t('TODO Add a description for \'administer node_noindex\''),
+      'description' => t('Administer node noindex'),
     ),
   );
 }
@@ -138,7 +138,7 @@ function _node_noindex_node_has_noindex($node) {
  */
 function _node_noindex_node_set_noindex($node) {
   _node_noindex_node_delete_noindex($node);
-  if ($node->noindex) {
+  if (isset($node->noindex) && $node->noindex) {
     $fields = array('nid' => $node->nid, 'noindex' => $node->noindex);
     db_insert('node_noindex')->fields($fields)->execute();
   }
