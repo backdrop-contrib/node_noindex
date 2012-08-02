@@ -87,12 +87,11 @@ function node_noindex_form_alter(&$form, $form_state, $form_id) {
         '#weight' => 20,
         '#group' => 'additional_settings',
       );
-
       $form['node_noindex']['noindex'] = array(
         '#type' => 'checkbox',
         '#title' => t('Exclude from searchengines'),
         '#description' => t('If enabled a "noindex"-header will be set on this node. This should mean that this node will not be indexed and not occur in search engine results'),
-        '#default_value' => isset($node->noindex) ? $node->noindex : 0,
+        '#default_value' => isset($node->noindex) ? $node->noindex : variable_get('node_noindex_default_' . $form['type']['#value'], 0),
         '#weight' => 5,
       );
     }
@@ -115,6 +114,17 @@ function node_noindex_form_node_type_form_alter(&$form, $form_state) {
     '#title' => t('Enable noindex option.'),
     '#default_value' => variable_get('node_noindex_' . $form['#node_type']->type, 0),
     '#description' => t('Should this node type display the noindex setting in the node edit form?'),
+  );
+  $form['node_noindex']['node_noindex_default'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Set noindex as default'),
+    '#default_value' => variable_get('node_noindex_default_' . $form['#node_type']->type, 0),
+    '#description' => t('Should this node type display have noindex as default?'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="node_noindex"]' => array('checked' => TRUE),
+      ),
+    ),
   );
 }
 
