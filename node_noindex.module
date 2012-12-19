@@ -134,6 +134,9 @@ function node_noindex_form_node_type_form_alter(&$form, $form_state) {
  *  true if the node has the noindex setting.
  */
 function _node_noindex_node_has_noindex($node) {
+  if (!isset($node->nid)) {
+    return FALSE;
+  }
   if (isset($node->noindex)) {
     return $node->noindex;
   }
