@@ -38,8 +38,7 @@ function node_noindex_node_load($nodes, $types) {
  */
 function node_noindex_node_view($node, $view_mode = 'full') {
   // We make sure we are on the node page.
-  $node = menu_get_object();
-  if (isset($node) && _node_noindex_node_has_noindex($node) && $view_mode == 'full') {
+  if (_node_noindex_node_has_noindex($node) && $view_mode == 'full' && ($node_mgo = menu_get_object()) && $node->nid == $node_mgo->nid) {
     $element = array(
       '#tag' => 'meta',
       '#attributes' => array(
