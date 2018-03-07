@@ -21,8 +21,6 @@ function node_noindex_permission() {
   );
 }
 
-
-
 /**
  * Implements hook_node_load().
  */
@@ -47,6 +45,32 @@ function node_noindex_node_view($node, $view_mode = 'full') {
       ),
     );
     drupal_add_html_head($element, 'node_noindex');
+  }
+}
+
+/**
+ * Helper function: get keys from array matching pattern.
+ */
+function _node_noindex_preg_grep_keys($pattern, $array, $flags = 0) {
+  $keys = array_intersect_key($array, array_flip(preg_grep($pattern, array_keys($array), $flags)));
+  return $keys;
+}
+
+/**
+ * Implements hook_html_head_alter().
+ *
+ * Remove rel canonical if noindex is set.
+ */
+function node_noindex_html_head_alter(&$head_elements) {
+  $noindex = _node_noindex_preg_grep_keys('/node_noindex/', $head_elements);
+  if (empty($noindex)) {
+    // Noindex is not set.
+    return;
+  }
+  $keys = _node_noindex_preg_grep_keys('/drupal_add_html_head_link:canonical:/', $head_elements);
+  foreach ($keys as $key => $value) {
+    // Remove rel canonical.
+    unset($head_elements[$key]);
   }
 }
 
