@@ -15,7 +15,7 @@ function node_noindex_views_data() {
 
   $data['node_noindex']['noindex'] = array(
     'title' => t('No index'),
-    'help' => t('Select nodes that are not indexed'),
+    'help' => t('Select nodes where the value of the robots meta tag is set to noindex'),
     'field' => array(
       'handler' => 'views_handler_field_boolean',
       'click sortable' => TRUE,

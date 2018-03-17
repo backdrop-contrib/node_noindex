@@ -1,11 +1,26 @@
 <?php
+
+/**
+ * Implements hook_help().
+ */
+function node_noindex_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#node_noindex':
+      $helptext = t('<p>The <strong>Node noindex</strong> module lets the administrator set the <code>robots</code> metatag in HTML head to <code>noindex</code>.</p>');
+      if (function_exists('advanced_help_hint_docs')){
+        $helptext .= '<p>' . advanced_help_hint_docs('node_noindex', NULL, TRUE) . '</p>';
+      }
+      return $helptext;
+      break;
+  }
+}
+
 /**
  * Implements hook_views_api().
  */
 function node_noindex_views_api() {
   return array(
-    'api' => '2.0',
-    'path' => drupal_get_path('module', 'node_noindex'),
+    'api' => '3.0',
   );
 }
 
@@ -20,6 +35,8 @@ function node_noindex_permission() {
     ),
   );
 }
+
+
 
 /**
  * Implements hook_node_load().
@@ -114,14 +131,15 @@ function node_noindex_form_alter(&$form, $form_state, $form_id) {
       );
       $form['node_noindex']['noindex'] = array(
         '#type' => 'checkbox',
-        '#title' => t('Exclude from searchengines'),
-        '#description' => t('If enabled a "noindex"-header will be set on this node. This should mean that this node will not be indexed and not occur in search engine results'),
+        '#title' => t('Instruct search engines not to index this node'),
+        '#description' => t('If enabled a the “robots” meta tag will be set to “noindex” for this node.'),
         '#default_value' => isset($node->noindex) ? $node->noindex : variable_get('node_noindex_default_' . $form['type']['#value'], 0),
         '#weight' => 5,
       );
     }
   }
 }
+
 
 /**
  * Implements hook_form_FORM_ID_alter().
@@ -138,13 +156,13 @@ function node_noindex_form_node_type_form_alter(&$form, $form_state) {
     '#type' => 'checkbox',
     '#title' => t('Enable noindex option.'),
     '#default_value' => variable_get('node_noindex_' . $form['#node_type']->type, 0),
-    '#description' => t('Should this node type display the noindex setting in the node edit form?'),
+    '#description' => t('Should this content type display the noindex setting in the node edit form?'),
   );
   $form['node_noindex']['node_noindex_default'] = array(
     '#type' => 'checkbox',
     '#title' => t('Set noindex as default'),
     '#default_value' => variable_get('node_noindex_default_' . $form['#node_type']->type, 0),
-    '#description' => t('Should this node type display have noindex as default?'),
+    '#description' => t('Should this content type display have noindex as default?'),
     '#states' => array(
       'visible' => array(
         ':input[name="node_noindex"]' => array('checked' => TRUE),

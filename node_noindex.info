@@ -1,7 +1,4 @@
-name = Node Noindex
-description = "Gives the option to exclude specific nodes from search engines"
+name = Node noindex
+description = "Lets the administrator exclude specific nodes from being indexed by well-behaved search engines."
 core = 7.x
-files[] = node_noindex.install
-files[] = node_noindex.module
-files[] = node_noindex.views.inc
 files[] = node_noindex_filter_handler.inc

@@ -4,7 +4,6 @@
  * Install, update and uninstall functions for the node_noindex module.
  */
 
-
 /**
  * Implements hook_install().
  */
@@ -43,5 +42,3 @@ function node_noindex_schema() {
   );
   return $schema;
 }
-
-
