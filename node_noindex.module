@@ -8,7 +8,7 @@ function node_noindex_help($path, $arg) {
     case 'admin/help#node_noindex':
       $helptext = t('<p>The <strong>Node noindex</strong> module lets the administrator set the <code>robots</code> metatag in HTML head to <code>noindex</code>.</p>');
       if (function_exists('advanced_help_hint_docs')){
-        $helptext .= '<p>' . advanced_help_hint_docs('node_noindex', NULL, TRUE) . '</p>';
+        $helptext .= '<p>' . advanced_help_hint_docs('node_noindex', 'https://www.drupal.org/docs/7/modules/node-noindex', TRUE) . '</p>';
       }
       return $helptext;
       break;
@@ -36,8 +36,6 @@ function node_noindex_permission() {
   );
 }
 
-
-
 /**
  * Implements hook_node_load().
  */
@@ -52,7 +50,7 @@ function node_noindex_node_load($nodes, $types) {
  * Implements hook_node_view().
  */
 function node_noindex_node_view($node, $view_mode = 'full') {
-  // We make sure we are on the node page.
+  // Make sure we are on the node page.
   if (_node_noindex_node_has_noindex($node) && $view_mode == 'full' && ($node_mgo = menu_get_object()) && $node->nid == $node_mgo->nid) {
     $element = array(
       '#tag' => 'meta',
@@ -63,6 +61,20 @@ function node_noindex_node_view($node, $view_mode = 'full') {
     );
     drupal_add_html_head($element, 'node_noindex');
   }
+}
+
+/**
+ * @return
+ *  true if the node has the noindex setting.
+ */
+function _node_noindex_node_has_noindex($node) {
+  if (!isset($node->nid)) {
+    return FALSE;
+  }
+  if (isset($node->noindex)) {
+    return $node->noindex;
+  }
+  return db_query("SELECT noindex FROM {node_noindex} WHERE nid = :nid", array(':nid' => $node->nid))->fetchField();
 }
 
 /**
@@ -92,6 +104,102 @@ function node_noindex_html_head_alter(&$head_elements) {
 }
 
 /**
+ * Implements hook_form_alter().
+ *
+ * Adds custom fieldset to the node form, and attach ajax behaviour for vertical
+ * panels to update the settings description.
+ *
+ * @see node_noindex.js
+ */
+function node_noindex_form_alter(&$form, $form_state, $form_id) {
+  if (!empty($form['#node_edit_form'])) {
+    if (user_access('administer node_noindex') && variable_get('node_noindex_ct_' . $form['type']['#value'], 0)) {
+      $node = $form['#node'];
+      
+      // Create a fieldset named 'node_noindex' that will be included in the vertical tab.
+      $form['node_noindex'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Search engine settings'),
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+        '#tree' => TRUE,
+        '#access' => user_access('administer node_noindex'),
+        '#weight' => 40,
+        '#group' => 'additional_settings',
+        '#attached' => array(
+          'js' => array(
+            'vertical-tabs' => drupal_get_path('module', 'node_noindex') . '/node_noindex.js',
+          ),
+        ),
+      );
+      $form['node_noindex']['noindex'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Set <code>noindex</code> in HTML head'),
+        '#description' => t('If enabled the “robots” meta tag will be set to “noindex” for this node.'),
+        '#default_value' => isset($node->noindex) ? $node->noindex : variable_get('node_noindex_ct_default_' . $form['type']['#value'], 0),
+        '#weight' => 5,
+      );
+    }
+  }
+}
+
+/**
+ * Custom validation handler for the content type form.
+ */
+function node_noindex_ct_validate($form, &$form_state) {
+  if (!$form_state['values']['node_noindex_ct']['node_noindex'] && $form_state['values']['node_noindex_ct']['node_noindex_default']) {
+    form_set_error('node_noindex_ct][node_noindex_default', t('You cannot set <code>noindex</code> as the default without also enabling the <code>noindex</code> function.'));
+  }
+}
+
+/**
+ * Custom submit handler for the content type form.
+ */
+function node_noindex_ct_submit($form, &$form_state) {
+  variable_set('node_noindex_ct_' . $form_state['values']['type'], $form_state['values']['node_noindex_ct']['node_noindex']);
+  variable_set('node_noindex_ct_default_' . $form_state['values']['type'], $form_state['values']['node_noindex_ct']['node_noindex_default']);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Alter the content type (ct) form.
+ */
+function node_noindex_form_node_type_form_alter(&$form, $form_state) {
+  $form['#validate'][] = 'node_noindex_ct_validate';
+  $form['actions']['submit']['#submit'][] = 'node_noindex_ct_submit';
+  $form['node_noindex_ct'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Search engine settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#tree' => TRUE,
+    '#group' => 'additional_settings',
+    '#attached' => array(
+      'js' => array(
+        'vertical-tabs' => drupal_get_path('module', 'node_noindex') . '/node_noindex.js',
+      ),
+    ),
+  );
+  variable_del('node_noindex_article');
+  variable_del('node_noindex_default_article');
+  $form['node_noindex_ct']['node_noindex'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable noindex option.'),
+    '#default_value' => variable_get('node_noindex_ct_' . $form['#node_type']->type, 0),
+    '#description' => t('Should this content type display the noindex setting in the node edit form?'),
+  );
+  $form['node_noindex_ct']['node_noindex_default'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Set noindex as default'),
+    '#default_value' => variable_get('node_noindex_ct_default_' . $form['#node_type']->type, 0),
+    '#description' => t('Should this content type display have noindex as default?'),
+  );
+}
+
+// Hooks for table {node_noindex}.
+
+/**
  * Implements hook_node_insert().
  */
 function node_noindex_node_insert($node) {
@@ -112,79 +220,7 @@ function node_noindex_node_delete($node) {
   _node_noindex_node_delete_noindex($node);
 }
 
-
-/**
- * Implements hook_form_alter().
- */
-function node_noindex_form_alter(&$form, $form_state, $form_id) {
-  if (!empty($form['#node_edit_form'])) {
-    if (user_access('administer node_noindex') && variable_get('node_noindex_' . $form['type']['#value'], 0)) {
-      $node = $form['#node'];
-      $form['node_noindex'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('Search engine settings'),
-        '#collapsible' => TRUE,
-        '#collapsed' => TRUE,
-        '#access' => user_access('administer node_noindex'),
-        '#weight' => 20,
-        '#group' => 'additional_settings',
-      );
-      $form['node_noindex']['noindex'] = array(
-        '#type' => 'checkbox',
-        '#title' => t('Instruct search engines not to index this node'),
-        '#description' => t('If enabled a the “robots” meta tag will be set to “noindex” for this node.'),
-        '#default_value' => isset($node->noindex) ? $node->noindex : variable_get('node_noindex_default_' . $form['type']['#value'], 0),
-        '#weight' => 5,
-      );
-    }
-  }
-}
-
-
-/**
- * Implements hook_form_FORM_ID_alter().
- */
-function node_noindex_form_node_type_form_alter(&$form, $form_state) {
-  $form['node_noindex'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Search engine settings'),
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
-    '#group' => 'additional_settings',
-  );
-  $form['node_noindex']['node_noindex'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Enable noindex option.'),
-    '#default_value' => variable_get('node_noindex_' . $form['#node_type']->type, 0),
-    '#description' => t('Should this content type display the noindex setting in the node edit form?'),
-  );
-  $form['node_noindex']['node_noindex_default'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Set noindex as default'),
-    '#default_value' => variable_get('node_noindex_default_' . $form['#node_type']->type, 0),
-    '#description' => t('Should this content type display have noindex as default?'),
-    '#states' => array(
-      'visible' => array(
-        ':input[name="node_noindex"]' => array('checked' => TRUE),
-      ),
-    ),
-  );
-}
-
-
-/**
- * @return
- *  true if the node has the noindex setting.
- */
-function _node_noindex_node_has_noindex($node) {
-  if (!isset($node->nid)) {
-    return FALSE;
-  }
-  if (isset($node->noindex)) {
-    return $node->noindex;
-  }
-  return db_query("SELECT noindex FROM {node_noindex} WHERE nid = :nid", array(':nid' => $node->nid))->fetchField();
-}
+// Helper functions to insert and delete setting in {node_noindex}.
 
 /**
  * Sets the noindex option to true on the node.
@@ -193,10 +229,16 @@ function _node_noindex_node_has_noindex($node) {
  *  object $node
  */
 function _node_noindex_node_set_noindex($node) {
+  // Always delete first to avoid duplicate key. Only insert if set.
   _node_noindex_node_delete_noindex($node);
-  if (isset($node->noindex) && $node->noindex) {
-    $fields = array('nid' => $node->nid, 'noindex' => $node->noindex);
-    db_insert('node_noindex')->fields($fields)->execute();
+  if (isset($node->node_noindex['noindex']) && $node->node_noindex['noindex']) {
+    $fields = array(
+      'nid' => $node->nid,
+      'noindex' => $node->node_noindex,
+    );
+    db_insert('node_noindex')
+      ->fields($fields)
+      ->execute();
   }
 }
 
@@ -208,6 +250,6 @@ function _node_noindex_node_set_noindex($node) {
  */
 function _node_noindex_node_delete_noindex($node) {
   db_delete('node_noindex')
-  ->condition('nid', $node->nid)
-  ->execute();
+    ->condition('nid', $node->nid)
+    ->execute();
 }

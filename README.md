@@ -10,11 +10,9 @@
 
 ## Introduction
 
-This module lets the administrator set the HTML `robots` metatag to
-`noindex` for a specific node. Doing so will also remove the
-`canonical` relation added by core from that node.  This will instruct
-well-behaved search engine robots to *not* index the node, preventing
-the node from appearing in search engine results.
+This module lets the administrator to alter the HTML head of a node to
+instruct well-behaved search engine robots to *not* index the node.
+This will prevent the node from appearing in search engine results.
 
 Reasons why you may want to do this is to tell robots *not* to index
 pages on your web site that:
@@ -67,15 +65,16 @@ type *Article*, navigate to *Administration » Structure » Content
 types » Article* and click the *edit* link.  Look for “Search engine
 settings” in the vertical tabs.  There are two check boxes: “Enable
 noindex option” and “Set noindex as default”.  The first enables the
-noindex option for the content type, the second makes noindex the
-default for the content type.
+noindex option for the content type, the second makes `noindex` the
+default when creating new content of the type. This setting does not
+effect nodes that already exist.
 
 When you've enabled the noindex option for a content type, you will
 find a vertical tab for “Search engine settings” in the vertical tabs
-when you edit an individual node of the type.  This let you check
-“Instruct search engines not to index this node”.  Checking this box
-and saving the node sets the `robots` metatag to `noindex` in the HTML
-head of this node.
+when you edit an individual node of the type.  This let you check “Set
+`noindex` in HTML head”.  Checking this box and saving the node sets
+the `robots` metatag to `noindex` and removes the `canonical` relation
+added by core in the HTML head of this node
 
 ## Views integration
 
