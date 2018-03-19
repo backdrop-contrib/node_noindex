@@ -10,8 +10,8 @@
 
 ## Introduction
 
-This module lets the administrator to alter the HTML head of a node to
-instruct well-behaved search engine robots to *not* index the node.
+This module lets the administrator to alter the HTML head of a node
+to instruct well-behaved search engine robots to *not* index the node.
 This will prevent the node from appearing in search engine results.
 
 Reasons why you may want to do this is to tell robots *not* to index
