@@ -167,7 +167,7 @@ function node_noindex_ct_submit($form, &$form_state) {
  */
 function node_noindex_form_node_type_form_alter(&$form, $form_state) {
   $form['#validate'][] = 'node_noindex_ct_validate';
-  $form['actions']['submit']['#submit'][] = 'node_noindex_ct_submit';
+  $form['#submit'][] = 'node_noindex_ct_submit';
   $form['node_noindex_ct'] = array(
     '#type' => 'fieldset',
     '#title' => t('Search engine settings'),
