@@ -51,7 +51,7 @@ function node_noindex_node_load($nodes, $types) {
  */
 function node_noindex_node_view($node, $view_mode = 'full') {
   // Make sure we are on the node page.
-  if (_node_noindex_node_has_noindex($node) && $view_mode == 'full' && ($node_mgo = menu_get_object()) && $node->nid == $node_mgo->nid) {
+  if (isset($node->noindex) && $node->noindex && $view_mode == 'full' && ($node_mgo = menu_get_object()) && $node->nid == $node_mgo->nid) {
     $element = array(
       '#tag' => 'meta',
       '#attributes' => array(
@@ -61,20 +61,6 @@ function node_noindex_node_view($node, $view_mode = 'full') {
     );
     drupal_add_html_head($element, 'node_noindex');
   }
-}
-
-/**
- * @return
- *  true if the node has the noindex setting.
- */
-function _node_noindex_node_has_noindex($node) {
-  if (!isset($node->nid)) {
-    return FALSE;
-  }
-  if (isset($node->noindex)) {
-    return $node->noindex;
-  }
-  return db_query("SELECT noindex FROM {node_noindex} WHERE nid = :nid", array(':nid' => $node->nid))->fetchField();
 }
 
 /**
@@ -221,22 +207,27 @@ function node_noindex_node_delete($node) {
 // Helper functions to insert and delete setting in {node_noindex}.
 
 /**
- * Sets the noindex option to true on the node.
+ * Sets or deletes the noindex option on the node.
  *
  * @param
- *  object $node
+ *   object $node
  */
 function _node_noindex_node_set_noindex($node) {
-  // Always delete first to avoid duplicate key. Only insert if set.
-  _node_noindex_node_delete_noindex($node);
-  if (isset($node->node_noindex['noindex']) && $node->node_noindex['noindex']) {
-    $fields = array(
-      'nid' => $node->nid,
-      'noindex' => $node->node_noindex,
-    );
-    db_insert('node_noindex')
-      ->fields($fields)
-      ->execute();
+  // If the noindex checkbox is present...
+  if (isset($node->node_noindex['noindex'])) {
+    // If the noindex checkbox is checked...
+    if ($node->node_noindex['noindex']) {
+      // Insert/update the noindex value to 1.
+      db_merge('node_noindex')
+        ->key(array('nid' => $node->nid))
+        ->fields(array('noindex' => 1))
+        ->execute();
+    }
+    // If the noindex checkbox is not checked and this isn't a new node...
+    elseif (!$node->is_new) {
+      // Delete the noindex value.
+      _node_noindex_node_delete_noindex($node);
+    }
   }
 }
 
