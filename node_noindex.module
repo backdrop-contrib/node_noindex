@@ -1,6 +1,17 @@
 <?php
 
 /**
+ * Implements hook_autoload_info().
+ *
+ * For Backdrop CMS.
+ */
+function node_noindex_autoload_info() {
+  return array(
+    'ClassName' => 'includes/node_noindex_filter_handler.inc',
+  );
+}
+
+/**
  * Implements hook_help().
  */
 function node_noindex_help($path, $arg) {
@@ -101,7 +112,7 @@ function node_noindex_form_alter(&$form, $form_state, $form_id) {
   if (!empty($form['#node_edit_form'])) {
     if (user_access('administer node_noindex') && variable_get('node_noindex_' . $form['type']['#value'], 0)) {
       $node = $form['#node'];
-      
+
       // Create a fieldset named 'node_noindex' that will be included in the vertical tab.
       $form['node_noindex'] = array(
         '#type' => 'fieldset',
