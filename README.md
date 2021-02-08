@@ -32,20 +32,20 @@ No special requirements.
 
 ## Recommended modules
 
-* [Advanced help hint][03]:  
+* [Advanced help hint][03]:
   Will link standard help text to **Advanced help**.
-* [Advanced Help][04]:  
+* [Advanced Help][04]:
   When this module is enabled, display of the project's `README.md`
   will be rendered when you visit
   `help/node_nofilter/README.md`.
-* [Markdown filter][05]:  
+* [Markdown filter][05]:
   When this module is enabled, the project's `README.md` will be
   rendered with the markdown filter.
 
 
 ## Installation
 
-1. Install as you would normally install a contributed drupal
+1. Install as you would normally install a contributed Backdrop CMS
    module. See: [Installing modules][06] for further information.
 
 2. Enable the **Node noindex** module on the *Modules* list page.
@@ -80,23 +80,13 @@ added by core in the HTML head of this node
 
 The module exposes the field “No index” to **Views**.
 
-
-## Maintainers
+## Credits for the original Drupal module maintainers.
 
 * [naxoc][07] - Camilla Krag Jensen (orginal creator)
-* [johsw][08] - Johannes Wehner 
+* [johsw][08] - Johannes Wehner
 * [herved][09] - Hervé Donner
 * [gisle][10] - Gisle Hannemyr (current maintainer)
 
 Any help with development (patches, reviews, comments) are welcome.
 
-[01]: https://support.google.com/webmasters/answer/93710
-[02]: https://en.wikipedia.org/wiki/Noindex  
-[03]: https://www.drupal.org/project/advanced_help_hint
-[04]: https://www.drupal.org/project/advanced_help
-[05]: https://www.drupal.org/project/markdown
-[06]: https://drupal.org/documentation/install/modules-themes/modules-7
-[07]: https://www.drupal.org/u/naxoc
-[08]: https://www.drupal.org/u/johsw
-[09]: https://www.drupal.org/u/herved
-[10]: https://www.drupal.org/u/gisle
+TO DO: Add resource URLs.
