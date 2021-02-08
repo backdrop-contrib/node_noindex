@@ -122,7 +122,7 @@ function node_noindex_html_head_alter(&$head_elements) {
  */
 function node_noindex_form_alter(&$form, $form_state, $form_id) {
   if (!empty($form['#node_edit_form'])) {
-    if (user_access('administer node_noindex') && variable_get('node_noindex_' . $form['type']['#value'], 0)) {
+    if (user_access('administer node_noindex') && config_get('node_noindex.settings', 'node_noindex_' . $form['type']['#value'], 0)) {
       $node = $form['#node'];
 
       // Create a fieldset named 'node_noindex' that will be included in the vertical tab.
@@ -145,7 +145,7 @@ function node_noindex_form_alter(&$form, $form_state, $form_id) {
         '#type' => 'checkbox',
         '#title' => t('Set <code>noindex</code> in HTML head'),
         '#description' => t('If enabled the “robots” meta tag will be set to “noindex” for this node.'),
-        '#default_value' => isset($node->noindex) ? $node->noindex : variable_get('node_noindex_default_' . $form['type']['#value'], 0),
+        '#default_value' => isset($node->noindex) ? $node->noindex : config_get('node_noindex.settings', 'node_noindex_default_' . $form['type']['#value'], 0),
         '#weight' => 5,
       );
     }
@@ -196,13 +196,13 @@ function node_noindex_form_node_type_form_alter(&$form, $form_state) {
   $form['node_noindex_ct']['node_noindex'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable noindex option.'),
-    '#default_value' => variable_get('node_noindex_' . $form['#node_type']->type, 0),
+    '#default_value' => config_get('node_noindex.settings', 'node_noindex_' . $form['#node_type']->type, 0),
     '#description' => t('Should this content type display the noindex setting in the node edit form?'),
   );
   $form['node_noindex_ct']['node_noindex_default'] = array(
     '#type' => 'checkbox',
     '#title' => t('Set noindex as default'),
-    '#default_value' => variable_get('node_noindex_default_' . $form['#node_type']->type, 0),
+    '#default_value' => config_get('node_noindex.settings', 'node_noindex_default_' . $form['#node_type']->type, 0),
     '#description' => t('Should this content type display have noindex as default?'),
   );
 }
