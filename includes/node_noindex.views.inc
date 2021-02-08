@@ -1,15 +1,21 @@
 <?php
+
 /**
  * @file
  * Register the node_noindex views filter handlers.
  */
+
+/**
+ * Implements hook_views_data().
+ */
 function node_noindex_views_data() {
-  $data['node_noindex']['table']['group']  = t('Node noindex');
+  $data['node_noindex']['table']['group'] = t('Node noindex');
   $data['node_noindex']['table']['join'] = array(
     'node' => array(
       'left_field' => 'nid',
       'field' => 'nid',
-      'type' => 'LEFT', // Not all nodes are node_noindex.
+      // Not all nodes are node_noindex.
+      'type' => 'LEFT',
     ),
   );
 
@@ -48,4 +54,3 @@ function node_noindex_views_handlers() {
     ),
   );
 }
-
