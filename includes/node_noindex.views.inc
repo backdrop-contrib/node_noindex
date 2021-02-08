@@ -39,7 +39,7 @@ function node_noindex_views_data() {
 function node_noindex_views_handlers() {
   return array(
     'info' => array(
-      'path' => drupal_get_path('module', 'node_noindex'),
+      'path' => backdrop_get_path('module', 'node_noindex'),
     ),
     'handlers' => array(
       'node_noindex_filter_handler' => array(
