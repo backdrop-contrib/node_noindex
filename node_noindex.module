@@ -8,6 +8,7 @@
 function node_noindex_autoload_info() {
   return array(
     'ClassName' => 'includes/node_noindex_filter_handler.inc',
+    'ClassName' => 'includes/node_noindex.views.inc',
   );
 }
 
@@ -153,8 +154,11 @@ function node_noindex_ct_validate($form, &$form_state) {
  * Custom submit handler for the content type form.
  */
 function node_noindex_ct_submit($form, &$form_state) {
-  variable_set('node_noindex_' . $form_state['values']['type'], $form_state['values']['node_noindex_ct']['node_noindex']);
-  variable_set('node_noindex_default_' . $form_state['values']['type'], $form_state['values']['node_noindex_ct']['node_noindex_default']);
+  // Set configuration settings to file.
+  $config = config('node_noindex.settings');
+  $config->set('node_noindex_' . $form_state['values']['type'], $form_state['values']['type'], $form_state['values']['node_noindex_ct']['node_noindex']);
+  $config->set('node_noindex_default_' . $form_state['values']['type'], $form_state['values']['node_noindex_ct']['node_noindex_default']);
+  $config->save();
 }
 
 /**
