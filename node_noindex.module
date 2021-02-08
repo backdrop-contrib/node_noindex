@@ -13,6 +13,17 @@ function node_noindex_autoload_info() {
 }
 
 /**
+ * Implements hook_config_info().
+ */
+function node_noindex_config_info() {
+  $prefixes['node_noindex.node_noindex.settings'] = array(
+    'label' => t('First set of settings'),
+    'group' => t('My Module'),
+  );
+  return $prefixes;
+}
+
+/**
  * Implements hook_help().
  */
 function node_noindex_help($path, $arg) {
