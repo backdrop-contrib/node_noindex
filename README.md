@@ -20,7 +20,7 @@ See also:
 Requirements
 ------------
 
-The node core module must be enabled.
+No requirements
 
 Recommended modules
 -------------------
@@ -53,9 +53,9 @@ To configure the module, you need the permission “Administer node
 noindex”.
 
 To enable the `noindex` option for a node content type navigate to the
-edit the node type's setting. For example, to enable it for the node
-type *Article*, navigate to *Administration » Structure » Content
-types » Article* and click the *edit* link.  Look for “Search engine
+configure the node type. For example, to enable it for the node
+type *Post*, navigate to *Administration » Structure » Content
+types » Post* and click the *configure* link.  Look for “Search engine
 settings” in the vertical tabs.  There are two check boxes: “Enable
 noindex option” and “Set noindex as default”.  The first enables the
 noindex option for the content type, the second makes `noindex` the
@@ -67,7 +67,7 @@ find a vertical tab for “Search engine settings” in the vertical tabs
 when you edit an individual node of the type.  This let you check “Set
 `noindex` in HTML head”.  Checking this box and saving the node sets
 the `robots` metatag to `noindex` and removes the `canonical` relation
-added by core in the HTML head of this node
+added by core in the HTML head of this node.
 
 Views integration
 -----------------
@@ -85,7 +85,7 @@ Credits
 
 - Ported to Backdrop CMS by [Justin Christoffersen](https://github.com/larsdesigns)
 - Originally written for Drupal by [Camilla Krag Jensen](https://www.drupal.org/u/naxoc)
-- Ccurrent Drupal project maintainer [Gisle Hannemyr](https://www.drupal.org/u/gisle)
+- Current Drupal project maintainer [Gisle Hannemyr](https://www.drupal.org/u/gisle)
 - Johannes Wehner [Johannes Wehner](https://www.drupal.org/u/johsw)
 - Hervé Donner [Hervé Donner](https://www.drupal.org/u/herved)
 - Port Sponsored by [Jeneration Web Development](https://www.jenerationweb.com)
