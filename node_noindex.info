@@ -1,8 +1,6 @@
 type = module
 name = Node noindex
 description = "Lets the administrator exclude specific nodes from being indexed by well-behaved search engines."
-package = Core
-version = 1.x-1.1.0
 backdrop = 1.x
 scripts[] = js/node_noindex.js
 dependencies[] = node

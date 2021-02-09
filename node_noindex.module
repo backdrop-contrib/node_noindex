@@ -1,9 +1,11 @@
 <?php
+/**
+ * @file
+ * Node Noindex module.
+ */
 
 /**
  * Implements hook_autoload_info().
- *
- * For Backdrop CMS.
  */
 function node_noindex_autoload_info() {
   return array(
@@ -18,24 +20,9 @@ function node_noindex_autoload_info() {
 function node_noindex_config_info() {
   $prefixes['node_noindex.node_noindex.settings'] = array(
     'label' => t('First set of settings'),
-    'group' => t('My Module'),
+    'group' => t('Configuration'),
   );
   return $prefixes;
-}
-
-/**
- * Implements hook_help().
- */
-function node_noindex_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#node_noindex':
-      $helptext = t('<p>The <strong>Node noindex</strong> module lets the administrator set the <code>robots</code> metatag in HTML head to <code>noindex</code>.</p>');
-      if (function_exists('advanced_help_hint_docs')){
-        $helptext .= '<p>' . advanced_help_hint_docs('node_noindex', 'https://backdropcms.org/project/biblio', TRUE) . '</p>';
-      }
-      return $helptext;
-      break;
-  }
 }
 
 /**
@@ -122,7 +109,7 @@ function node_noindex_html_head_alter(&$head_elements) {
  */
 function node_noindex_form_alter(&$form, $form_state, $form_id) {
   if (!empty($form['#node_edit_form'])) {
-    if (user_access('administer node_noindex') && config_get('node_noindex.settings', 'node_noindex_' . $form['type']['#value'], 0)) {
+    if (user_access('administer node_noindex') && config_get('node_noindex.settings', 'node_noindex_' . $form['type']['#value'])) {
       $node = $form['#node'];
 
       // Create a fieldset named 'node_noindex' that will be included in the vertical tab.
@@ -145,7 +132,7 @@ function node_noindex_form_alter(&$form, $form_state, $form_id) {
         '#type' => 'checkbox',
         '#title' => t('Set <code>noindex</code> in HTML head'),
         '#description' => t('If enabled the “robots” meta tag will be set to “noindex” for this node.'),
-        '#default_value' => isset($node->noindex) ? $node->noindex : config_get('node_noindex.settings', 'node_noindex_default_' . $form['type']['#value'], 0),
+        '#default_value' => isset($node->noindex) ? $node->noindex : config_get('node_noindex.settings', 'node_noindex_default_' . $form['type']['#value']),
         '#weight' => 5,
       );
     }
@@ -189,20 +176,20 @@ function node_noindex_form_node_type_form_alter(&$form, $form_state) {
     '#group' => 'additional_settings',
     '#attached' => array(
       'js' => array(
-        'vertical-tabs' => backdrop_get_path('module', 'node_noindex') . '/node_noindex.js',
+        'vertical-tabs' => backdrop_get_path('module', 'node_noindex') . '/js/node_noindex.js',
       ),
     ),
   );
   $form['node_noindex_ct']['node_noindex'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable noindex option.'),
-    '#default_value' => config_get('node_noindex.settings', 'node_noindex_' . $form['#node_type']->type, 0),
+    '#default_value' => config_get('node_noindex.settings', 'node_noindex_' . $form['#node_type']->type),
     '#description' => t('Should this content type display the noindex setting in the node edit form?'),
   );
   $form['node_noindex_ct']['node_noindex_default'] = array(
     '#type' => 'checkbox',
     '#title' => t('Set noindex as default'),
-    '#default_value' => config_get('node_noindex.settings', 'node_noindex_default_' . $form['#node_type']->type, 0),
+    '#default_value' => config_get('node_noindex.settings', 'node_noindex_default_' . $form['#node_type']->type),
     '#description' => t('Should this content type display have noindex as default?'),
   );
 }
