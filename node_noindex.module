@@ -137,7 +137,7 @@ function node_noindex_form_alter(&$form, $form_state, $form_id) {
         '#group' => 'additional_settings',
         '#attached' => array(
           'js' => array(
-            'vertical-tabs' => backdrop_get_path('module', 'node_noindex') . '/node_noindex.js',
+            'vertical-tabs' => backdrop_get_path('module', 'node_noindex') . '/js/node_noindex.js',
           ),
         ),
       );
