@@ -1,36 +1,29 @@
-## Contents of this file
+Node Noindex
+============
 
-* Introduction
-* Requirements
-* Recommended modules
-* Installation
-* Configuration
-* Views integration
-* Maintainers
-
-## Introduction
-
-This module lets the administrator to alter the HTML head of a node
+This module lets the administrator alter the HTML head of a node
 to instruct well-behaved search engine robots to *not* index the node.
 This will prevent the node from appearing in search engine results.
 
 Reasons why you may want to do this is to tell robots *not* to index
 pages on your web site that:
 
-* are unimportant
-* are transitory
-* contains personal and/or sensitive data
+* Are unimportant
+* Are transitory
+* Contains personal and/or sensitive data
 
 See also:
 
-* [Google: Block search indexing with noindex][01]
-* [Wikipedia: noindex][02]
+* [Google: Block search indexing with noindex](https://developers.google.com/search/docs/advanced/crawling/block-access-overview)
+* [Wikipedia: noindex](https://en.wikipedia.org/wiki/Template:NOINDEX)
 
-## Requirements
+Requirements
+------------
 
-No special requirements.
+The node core module must be enabled.
 
-## Recommended modules
+Recommended modules
+-------------------
 
 * [Advanced help hint][03]:
   Will link standard help text to **Advanced help**.
@@ -42,8 +35,8 @@ No special requirements.
   When this module is enabled, the project's `README.md` will be
   rendered with the markdown filter.
 
-
-## Installation
+Installation
+------------
 
 1. Install as you would normally install a contributed Backdrop CMS
    module. See: [Installing modules][06] for further information.
@@ -53,8 +46,8 @@ No special requirements.
 3. Proceed to configure the module as described in the configuraton
    section below.
 
-
-## Configuration
+Configuration
+-------------
 
 To configure the module, you need the permission “Administer node
 noindex”.
@@ -76,17 +69,29 @@ when you edit an individual node of the type.  This let you check “Set
 the `robots` metatag to `noindex` and removes the `canonical` relation
 added by core in the HTML head of this node
 
-## Views integration
+Views integration
+-----------------
 
 The module exposes the field “No index” to **Views**.
 
-## Credits for the original Drupal module maintainers.
+Current Maintainers
+-------------------
 
-* [naxoc][07] - Camilla Krag Jensen (orginal creator)
-* [johsw][08] - Johannes Wehner
-* [herved][09] - Hervé Donner
-* [gisle][10] - Gisle Hannemyr (current maintainer)
+- [Justin Christoffersen](https://github.com/larsdesigns)
+- [Jen Lampton](https://github.com/jenlampton)
 
-Any help with development (patches, reviews, comments) are welcome.
+Credits
+-------
 
-TO DO: Add resource URLs.
+- Ported to Backdrop CMS by [Justin Christoffersen](https://github.com/larsdesigns)
+- Originally written for Drupal by [Camilla Krag Jensen](https://www.drupal.org/u/naxoc)
+- Ccurrent Drupal project maintainer [Gisle Hannemyr](https://www.drupal.org/u/gisle)
+- Johannes Wehner [Johannes Wehner](https://www.drupal.org/u/johsw)
+- Hervé Donner [Hervé Donner](https://www.drupal.org/u/herved)
+- Port Sponsored by [Jeneration Web Development](https://www.jenerationweb.com)
+
+License
+-------
+
+This project is GPL v2 software.
+See the LICENSE.txt file in this directory for complete text.
