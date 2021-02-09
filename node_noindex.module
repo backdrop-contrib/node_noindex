@@ -100,42 +100,40 @@ function node_noindex_html_head_alter(&$head_elements) {
 }
 
 /**
- * Implements hook_form_alter().
+ * Implements hook_form_BASE_FORM_ID_alter().
  *
  * Adds custom fieldset to the node form, and attach ajax behaviour for vertical
  * panels to update the settings description.
  *
  * @see node_noindex.js
  */
-function node_noindex_form_alter(&$form, $form_state, $form_id) {
-  if (!empty($form['#node_edit_form'])) {
-    if (user_access('administer node_noindex') && config_get('node_noindex.settings', 'node_noindex_' . $form['type']['#value'])) {
-      $node = $form['#node'];
+function node_noindex_form_node_form_alter(&$form, $form_state, $form_id) {
+  if (user_access('administer node_noindex') && config_get('node_noindex.settings', 'node_noindex_' . $form['type']['#value'])) {
+    $node = $form['#node'];
 
-      // Create a fieldset named 'node_noindex' that will be included in the vertical tab.
-      $form['node_noindex'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('Search engine settings'),
-        '#collapsible' => TRUE,
-        '#collapsed' => TRUE,
-        '#tree' => TRUE,
-        '#access' => user_access('administer node_noindex'),
-        '#weight' => 40,
-        '#group' => 'additional_settings',
-        '#attached' => array(
-          'js' => array(
-            'vertical-tabs' => backdrop_get_path('module', 'node_noindex') . '/js/node_noindex.js',
-          ),
+    // Create a fieldset named 'node_noindex' that will be included in the vertical tab.
+    $form['node_noindex'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Search engine settings'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#tree' => TRUE,
+      '#access' => user_access('administer node_noindex'),
+      '#weight' => 40,
+      '#group' => 'additional_settings',
+      '#attached' => array(
+        'js' => array(
+          'vertical-tabs' => backdrop_get_path('module', 'node_noindex') . '/js/node_noindex.js',
         ),
-      );
-      $form['node_noindex']['noindex'] = array(
-        '#type' => 'checkbox',
-        '#title' => t('Set <code>noindex</code> in HTML head'),
-        '#description' => t('If enabled the “robots” meta tag will be set to “noindex” for this node.'),
-        '#default_value' => isset($node->noindex) ? $node->noindex : config_get('node_noindex.settings', 'node_noindex_default_' . $form['type']['#value']),
-        '#weight' => 5,
-      );
-    }
+      ),
+    );
+    $form['node_noindex']['noindex'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Set <code>noindex</code> in HTML head'),
+      '#description' => t('If enabled the “robots” meta tag will be set to “noindex” for this node.'),
+      '#default_value' => isset($node->noindex) ? $node->noindex : config_get('node_noindex.settings', 'node_noindex_default_' . $form['type']['#value']),
+      '#weight' => 5,
+    );
   }
 }
 
