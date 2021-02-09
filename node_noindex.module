@@ -19,7 +19,7 @@ function node_noindex_autoload_info() {
  */
 function node_noindex_config_info() {
   $prefixes['node_noindex.node_noindex.settings'] = array(
-    'label' => t('First set of settings'),
+    'label' => t('Node Noindex settings'),
     'group' => t('Configuration'),
   );
   return $prefixes;
