@@ -25,25 +25,17 @@ No requirements
 Recommended modules
 -------------------
 
-* [Advanced help hint][03]:
-  Will link standard help text to **Advanced help**.
-* [Advanced Help][04]:
-  When this module is enabled, display of the project's `README.md`
-  will be rendered when you visit
-  `help/node_nofilter/README.md`.
-* [Markdown filter][05]:
-  When this module is enabled, the project's `README.md` will be
-  rendered with the markdown filter.
+No recommendations
 
 Installation
 ------------
 
 1. Install as you would normally install a contributed Backdrop CMS
-   module. See: [Installing modules][06] for further information.
+   module. See: [Installing modules](https://backdropcms.org/user-guide/deep-dive-manual-module-installation) for further information.
 
 2. Enable the **Node noindex** module on the *Modules* list page.
 
-3. Proceed to configure the module as described in the configuraton
+3. Proceed to configure the module as described in the configuration
    section below.
 
 Configuration
