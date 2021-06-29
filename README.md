@@ -77,10 +77,9 @@ Credits
 
 - Ported to Backdrop CMS by [Justin Christoffersen](https://github.com/larsdesigns)
 - Originally written for Drupal by [Camilla Krag Jensen](https://www.drupal.org/u/naxoc)
-- Current Drupal project maintainer [Gisle Hannemyr](https://www.drupal.org/u/gisle)
-- Johannes Wehner [Johannes Wehner](https://www.drupal.org/u/johsw)
-- Hervé Donner [Hervé Donner](https://www.drupal.org/u/herved)
-- Port Sponsored by [Jeneration Web Development](https://www.jenerationweb.com)
+- Drupal project maintainers: [Gisle Hannemyr](https://www.drupal.org/u/gisle),
+Johannes Wehner [Johannes Wehner](https://www.drupal.org/u/johsw), Hervé Donner [Hervé Donner](https://www.drupal.org/u/herved),
+Port Sponsored by [Jeneration Web Development](https://www.jenerationweb.com)
 
 License
 -------
